@@ -191,6 +191,15 @@ if __name__ == "__main__":
     upload.add_argument("bucket")
     upload.add_argument("key")
 
+    acl = subparsers.add_parser("set-acl", help="Set object ACL to public-read")
+    acl.add_argument("bucket")
+    acl.add_argument("key")
+
+    add_policy = subparsers.add_parser("add-policy", help="Add public-read bucket policy")
+    add_policy.add_argument("bucket")
+
+    show_policy = subparsers.add_parser("show-policy", help="Show bucket policy")
+    show_policy.add_argument("bucket")
     
     args = parser.parse_args()
     if args.command == "list":
@@ -203,4 +212,12 @@ if __name__ == "__main__":
         print(bucket_exists(client, args.bucket))
     elif args.command == "upload":
         print(download_file_and_upload_to_s3(client, args.bucket, args.url, args.key))
+    elif args.command == "set-acl":
+        set_object_access_policy(client, args.bucket, args.key)
+    elif args.command == "add-policy":
+        create_bucket_policy(client, args.bucket)
+    elif args.command == "show-policy":
+        read_bucket_policy(client, args.bucket)
+    else:
+        parser.print_help()
 
